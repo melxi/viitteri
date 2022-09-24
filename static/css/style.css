@@ -1,0 +1,12 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    background: #000;
+}
+
+main {
+    height: 100vh;
+}
