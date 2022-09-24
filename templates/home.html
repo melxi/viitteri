@@ -1,0 +1,12 @@
+{% extends "layouts/base.html" %}
+{% block title %}Viitteri.{% endblock %}
+{% block body %}
+    <main class="d-flex flex-nowrap">
+        {% block sidebar %}
+        {% include 'includes/sidebar.html' %}
+        {% endblock %}
+        {% block content %}
+        <h1>Welcome to Viitteri</h1>
+        {% endblock %}
+    </main>
+{% endblock %}

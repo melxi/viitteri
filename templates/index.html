@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% block title %}Viitteri.{% endblock %}
+{% block content %}
+    <main class="d-flex flex-nowrap">
+        <div class="container">
+            <h1>Welcome to Viitteri</h1>
+            <a href="{{url_for('login')}}">Sign in</a><br>
+            <a href="{{url_for('signup')}}">Sign up</a><br>
+        </div>
+    </main>
+{% endblock %}
