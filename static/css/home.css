@@ -1,0 +1,11 @@
+body {
+    display: flex !important;
+}
+
+header {
+    height: 100vh;
+}
+
+nav {
+    height: 100%;
+}

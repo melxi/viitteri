@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect
 from app import app
 import users
+import tweets
 
 @app.route('/')
 def index():
@@ -8,12 +9,9 @@ def index():
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-    if (request.method == 'POST'):
-        print('login request')
+    if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print(username)
-        print(password)
 
         if not users.login(username, password):
             return render_template('login.html')
@@ -31,8 +29,9 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        role = 1
 
-        if not users.signup(username, password):
+        if not users.signup(username, password, role):
             return render_template('signup.html')
         
         return redirect('/home')
@@ -41,4 +40,25 @@ def signup():
 
 @app.route('/home')
 def home():
+    # users.require_role(1)
+    # users.check_csrf()
+    tw = tweets.get_tweets(users.user_id())
+    print(tw)
+    return render_template('home.html', tweets = tweets.get_tweets(users.user_id()))
+
+@app.route('/tweet', methods = ['POST'])
+def add_tweet():
+    users.require_role(1)
+    # users.check_csrf()
+
+    user_id = users.user_id()
+    print(user_id)
+
+    if request.method == 'POST':
+        post = request.form['post']
+
+        tweets.add_tweet(post, user_id)
+
+        return redirect('/home')
+
     return render_template('home.html')

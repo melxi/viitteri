@@ -5,6 +5,7 @@ CREATE TABLE users(
     followers_count INTEGER DEFAULT 0,
     follows_count INTEGER DEFAULT 0,
     password TEXT NOT NULL,
+    role INTEGER DEFAULT 1,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(user_id)
@@ -14,8 +15,8 @@ CREATE TABLE tweets(
     tweet_id SERIAL,
     user_id INTEGER NOT NULL,
     post VARCHAR(280) NOT NULL,
-    total_likes INTEGER,
-    total_comments INTEGER,
+    total_likes INTEGER DEFAULT 0,
+    total_comments INTEGER DEFAULT 0,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(tweet_id),

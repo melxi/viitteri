@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %}
-{% block title %}Viitteri. Login{% endblock %}
+{% block title %}Log in to Viitteri{% endblock %}
 {% block styles %}
     {{super()}}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
@@ -10,11 +10,12 @@
             <h1 class="h3 mb-3 fw-normal">Sign in to Viitteri</h1>
             
             <div class="form-floating">
-                <input type="username" class="form-control" id="floatingInput" placeholder="Username">
+                <input type="username" class="form-control" name="username" id="floatingInput" placeholder="Username">
                 <label for="floatingInput">Username</label>
             </div>
+            <br/>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword">Password</label>
             </div>
             
