@@ -29,9 +29,8 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        role = 1
 
-        if not users.signup(username, password, role):
+        if not users.signup(username, password):
             print('failing to sign up')
             return render_template('signup.html')
         

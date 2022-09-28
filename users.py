@@ -25,13 +25,13 @@ def logout():
     del session["username"]
     del session["user_role"]
 
-def signup(username, password, role):
+def signup(username, password):
     password_hash = generate_password_hash(password)
     
     try:
-        sql = """INSERT INTO users (username, password, role)
-                 VALUES (:username, :password, :role)"""
-        db.session.execute(sql, {"username":username, "password":password_hash, "role":role})
+        sql = """INSERT INTO users(username, password)
+                 VALUES (:username, :password)"""
+        db.session.execute(sql, {"username":username, "password":password_hash})
         db.session.commit()
         print('query successful')
     except:
