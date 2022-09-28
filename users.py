@@ -33,9 +33,7 @@ def signup(username, password):
                  VALUES (:username, :password)"""
         db.session.execute(sql, {"username":username, "password":password_hash})
         db.session.commit()
-        print('query successful')
     except:
-        print('failed to query')
         return False
 
     return login(username, password)
@@ -45,7 +43,9 @@ def user_id():
 
 def require_role(role):
     if role > session.get("user_role", 0):
-        abort(403)
+        return False
+    else:
+        return True
 
 def check_csrf():
     if session["csrf_token"] != request.form["csrf_token"]:

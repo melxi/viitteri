@@ -21,6 +21,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control" name="post" id="floatingInput" placeholder="What's happening?">
                             <label for="floatingInput">What's happening?</label>
+                            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                         </div>
                         <br/>
                         <button class="w-100 btn btn-lg btn-primary" type="submit">Tweet</button>

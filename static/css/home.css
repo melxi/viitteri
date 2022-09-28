@@ -8,4 +8,5 @@ header {
 
 nav {
     height: 100%;
+    width: inherit;
 }

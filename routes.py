@@ -22,6 +22,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+    users.logout()
     return redirect('/')
 
 @app.route('/signup', methods = ['GET', 'POST'])
@@ -31,7 +32,6 @@ def signup():
         password = request.form['password']
 
         if not users.signup(username, password):
-            print('failing to sign up')
             return render_template('signup.html')
         
         return redirect('/home')
@@ -40,15 +40,15 @@ def signup():
 
 @app.route('/home')
 def home():
-    # users.require_role(1)
-    # users.check_csrf()
-
+    if not users.require_role(1):
+        return redirect('/')
+    
     return render_template('home.html', tweets = tweets.get_tweets(users.user_id()))
 
 @app.route('/tweet', methods = ['POST'])
 def add_tweet():
     users.require_role(1)
-    # users.check_csrf()
+    users.check_csrf()
 
     user_id = users.user_id()
 
@@ -60,3 +60,8 @@ def add_tweet():
         return redirect('/home')
 
     return render_template('home.html')
+
+@app.route('/tweet/<int:tweet_id>', methods = ['GET'])
+def get_tweet(tweet_id):
+    
+    return render_template("tweet.html", tweet=tweets.get_tweet(tweet_id))    

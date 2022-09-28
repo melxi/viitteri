@@ -16,7 +16,7 @@ CREATE TABLE tweets(
     user_id INTEGER NOT NULL,
     post VARCHAR(280) NOT NULL,
     total_likes INTEGER DEFAULT 0,
-    total_comments INTEGER DEFAULT 0,
+    total_replies INTEGER DEFAULT 0,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(tweet_id),
@@ -35,20 +35,6 @@ CREATE TABLE replies(
       FOREIGN KEY(user_id) 
 	    REFERENCES users(user_id),
     CONSTRAINT rp_tweets_fk
-      FOREIGN KEY(tweet_id) 
-	    REFERENCES tweets(tweet_id)
-);
-
-CREATE TABLE comments(
-    comment_id SERIAL,
-    user_id INTEGER NOT NULL,
-    tweet_id INTEGER NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(comment_id),
-    CONSTRAINT cm_users_fk
-      FOREIGN KEY(user_id) 
-	    REFERENCES users(user_id),
-    CONSTRAINT cm_tweets_fk
       FOREIGN KEY(tweet_id) 
 	    REFERENCES tweets(tweet_id)
 );
