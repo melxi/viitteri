@@ -33,7 +33,9 @@ def signup(username, password, role):
                  VALUES (:username, :password, :role)"""
         db.session.execute(sql, {"username":username, "password":password_hash, "role":role})
         db.session.commit()
+        print('query successful')
     except:
+        print('failed to query')
         return False
 
     return login(username, password)

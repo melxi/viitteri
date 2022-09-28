@@ -32,6 +32,7 @@ def signup():
         role = 1
 
         if not users.signup(username, password, role):
+            print('failing to sign up')
             return render_template('signup.html')
         
         return redirect('/home')
@@ -42,8 +43,7 @@ def signup():
 def home():
     # users.require_role(1)
     # users.check_csrf()
-    tw = tweets.get_tweets(users.user_id())
-    print(tw)
+
     return render_template('home.html', tweets = tweets.get_tweets(users.user_id()))
 
 @app.route('/tweet', methods = ['POST'])
@@ -52,7 +52,6 @@ def add_tweet():
     # users.check_csrf()
 
     user_id = users.user_id()
-    print(user_id)
 
     if request.method == 'POST':
         post = request.form['post']
