@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, json
 from app import app
 import users
 import tweets
@@ -43,7 +43,22 @@ def home():
     if not users.require_role(1):
         return redirect('/')
     
-    return render_template('home.html', tweets = tweets.get_tweets(users.user_id()))
+    return render_template('home.html', tweets = tweets.get_tweets(users.user_id()), users = users.get_users())
+
+@app.route('/follow', methods=['POST'])
+def follow():
+    users.require_role(1)
+
+    user_id = users.user_id()
+
+    if request.method == 'POST':
+        data = request.get_json()
+        print(data)
+        followee_id = data
+
+        users.follow_user(user_id, followee_id)
+
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 @app.route('/tweet', methods = ['POST'])
 def add_tweet():
@@ -51,6 +66,13 @@ def add_tweet():
     users.check_csrf()
 
     user_id = users.user_id()
+
+    if request.method == 'POST':
+        post = request.form['post']
+
+        tweets.add_tweet(post, user_id)
+
+        return redirect('/home')
 
     if request.method == 'POST':
         post = request.form['post']

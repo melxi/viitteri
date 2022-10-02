@@ -12,19 +12,19 @@
     </header>
     <main class="col-xl-6 col-lg-7 col-md-9 col-sm-10 px-md-4">
         <div class="container">
-            <div class="home-timeline">
+            <div class="home-timeline pt-2">
                 <div class="title">
                     <h1>Home</h1>
                 </div>
                 <div class="form-tweet">
-                    <form action="/tweet" method="POST">                        
+                    <form class="d-flex flex-column" action="/tweet" method="POST">                        
                         <div class="form-floating">
                             <input type="text" class="form-control" name="post" id="floatingInput" placeholder="What's happening?">
                             <label for="floatingInput">What's happening?</label>
-                            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                            <input type="hidden" name="csrf_token" id="csrfToken" value="{{ session.csrf_token }}">
                         </div>
                         <br/>
-                        <button class="w-100 btn btn-lg btn-primary" type="submit">Tweet</button>
+                        <button class="btn btn-primary align-self-end" type="submit">Tweet</button>
                     </form>
                 </div>
                 <br/>
@@ -45,7 +45,30 @@
             </div>
         </div>
     </main>
-    <sidebar class="d-none d-md-block col-xl-3 col-lg-2">
-        <h1>sidebar</h1>
+    <sidebar class="d-none d-md-block col-xl-3 col-lg-2 px-md-2">
+        <div class="input-group my-3">
+            <span class="input-group-text">Search</span>
+            <input type="text" aria-label="username" class="form-control">
+        </div>
+        <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-light">
+            <div class="d-flex align-items-center flex-shrink-0 p-3">
+                <span class="fs-5 fw-semibold">Who to follow</span>
+            </div>
+            {% if users %}
+            <div class="list-group scrollarea">
+                {% for user in users %}
+                {% if user.follower_id != session.user_id %}
+                <a href="#" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+                    <div class="d-flex w-100 align-items-center justify-content-between">
+                      <strong class="mb-1">{{user.username}}</strong>
+                      <small onClick="followUser('{{ user.user_id }}', '{{ session.csrf_token }}')">Follow</small>
+                    </div>
+                    <div class="col-10 mb-1 small">@{{user.username}}</div>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
     </sidebar>
 {% endblock %}

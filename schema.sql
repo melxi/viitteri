@@ -2,8 +2,6 @@ CREATE TABLE users(
     user_id SERIAL,
     username VARCHAR(20) NOT NULL,
     favorites_count INTEGER DEFAULT 0,
-    followers_count INTEGER DEFAULT 0,
-    follows_count INTEGER DEFAULT 0,
     password TEXT NOT NULL,
     role INTEGER DEFAULT 1,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
@@ -39,20 +37,26 @@ CREATE TABLE replies(
 	    REFERENCES tweets(tweet_id)
 );
 
-CREATE TABLE followers(
-    follower_id SERIAL,
+CREATE TABLE followees(
+    id SERIAL,
     user_id INTEGER NOT NULL,
-    PRIMARY KEY(follower_id),
-    CONSTRAINT fl_users_fk
+    followee_id INTEGER NOT NULL,
+    CONSTRAINT fw_users_fk
       FOREIGN KEY(user_id) 
+	    REFERENCES users(user_id),
+    CONSTRAINT fw_followees_fk
+      FOREIGN KEY(followee_id)
 	    REFERENCES users(user_id)
 );
 
-CREATE TABLE followings(
-    following_id SERIAL,
+CREATE TABLE followers(
+    id SERIAL,
     user_id INTEGER NOT NULL,
-    PRIMARY KEY(following_id),
-    CONSTRAINT fw_users_fk
+    follower_id INTEGER NOT NULL,
+    CONSTRAINT fl_users_fk
       FOREIGN KEY(user_id) 
+	    REFERENCES users(user_id),
+    CONSTRAINT fl_followers_fk
+      FOREIGN KEY(follower_id)
 	    REFERENCES users(user_id)
 );
