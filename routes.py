@@ -1,10 +1,14 @@
-from flask import render_template, request, redirect, json
+from flask import render_template, request, redirect, session, json
 from app import app
 import users
 import tweets
 
 @app.route('/')
 def index():
+    print(session.get('logged_in'))
+    if session.get('logged_in') == True:
+        return redirect('/home')
+
     return render_template('index.html')
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -16,6 +20,9 @@ def login():
         if not users.login(username, password):
             return render_template('login.html')
             
+        return redirect('/home')
+
+    if session.get('logged_in') == True:
         return redirect('/home')
 
     return render_template('login.html')
@@ -74,16 +81,14 @@ def add_tweet():
 
         return redirect('/home')
 
-    if request.method == 'POST':
-        post = request.form['post']
-
-        tweets.add_tweet(post, user_id)
-
-        return redirect('/home')
-
     return render_template('home.html')
 
 @app.route('/tweet/<int:tweet_id>', methods = ['GET'])
 def get_tweet(tweet_id):
     
-    return render_template("tweet.html", tweet=tweets.get_tweet(tweet_id))    
+    return render_template('tweet.html', tweet=tweets.get_tweet(tweet_id))
+
+@app.route('/<string:username>', methods=['GET'])
+def get_profile(username):
+    
+    return render_template('profile.html', user = users.get_user(), users = users.get_users(), tweets = tweets.get_tweets(users.user_id()),)

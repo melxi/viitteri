@@ -17,6 +17,7 @@ def login(username, password):
     session["username"] = username
     session["user_role"] = user[2]
     session["csrf_token"] = os.urandom(16).hex()
+    session["logged_in"] = True
     
     return True
 
@@ -24,6 +25,7 @@ def logout():
     del session["user_id"]
     del session["username"]
     del session["user_role"]
+    session["logged_in"] = False 
 
 def signup(username, password):
     password_hash = generate_password_hash(password)
@@ -60,17 +62,25 @@ def get_users():
              WHERE us.user_id!=:user_id"""
     result = db.session.execute(sql, {"user_id": user_id()})
     users = result.fetchall()
-
     return users
 
+def get_user():
+    sql = """SELECT us.username, TO_CHAR(us.created_at, 'Month YYYY') AS joined,
+            (SELECT COUNT(tw.tweet_id) FROM tweets AS tw WHERE user_id=:user_id) AS total_tweets,
+            (SELECT COUNT(fw.followee_id) FROM followees AS fw WHERE user_id=:user_id) AS total_followees,
+            (SELECT COUNT(fl.follower_id) FROM followers AS fl WHERE user_id=:user_id) AS total_followers
+            FROM users AS us
+            WHERE us.user_id=:user_id"""
+    result = db.session.execute(sql, {"user_id": user_id()})
+    user = result.fetchone()
+
+    return user
+
 def follow_user(user_id, followee_id):
-    print('user_id', user_id)
-    print('followee_id', followee_id)
     sql = "SELECT user_id, followee_id FROM followees WHERE user_id=:user_id AND followee_id=:followee_id"
     result = db.session.execute(sql, {"user_id": user_id, "followee_id":followee_id})
     followee = result.fetchone()
 
-    print('followee', followee)
     if not followee:
         try:
             sql = """INSERT INTO followees(user_id, followee_id)
@@ -85,5 +95,4 @@ def follow_user(user_id, followee_id):
         except:
             return False
 
-    print('already following')
     return True

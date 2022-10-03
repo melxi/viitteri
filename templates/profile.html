@@ -1,0 +1,104 @@
+{% extends "layouts/base.html" %}
+{% block title %}Home{% endblock %}
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+{% endblock %}
+{% block content %}
+    <header class="col-xl-3 col-lg-3 col-md-3 col-sm-2 d-md-block">
+        {% block sidebar %}
+        {% include 'includes/sidebar.html' %}
+        {% endblock %}
+    </header>
+    <main class="col-xl-6 col-lg-7 col-md-9 col-sm-10 px-md-4">
+        <div class="container">
+            <div class="card m-3">
+                <div class="row g-0">
+                    <div class="card-header">
+                        <a href="/home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                            </svg>
+                            <span class="fs-4 px-2">{{ session.username }}</span>
+                        </a>
+                        <span>{{ user.total_tweets }} Tweets</span>
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                              <div class="col-md-4">
+                                <svg class="bd-placeholder-img img-fluid rounded-start" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image</text></svg>
+                              </div>
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ user.username }}</h5>
+                                  <p class="card-text">@{{ user.username }}</p>
+                                  <p class="card-text"><small class="text-muted">Joined {{ user.joined }}</small></p>
+                                  <span><strong>{{ user.total_followees }}</strong> Following</span>
+                                  <span><strong>{{ user.total_followers }}</strong> Followers</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="tweets-tab" data-bs-toggle="tab" data-bs-target="#tweets-tab-pane" type="button" role="tab" aria-controls="tweets-tab-pane" aria-selected="true">Tweets</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="replies-tab" data-bs-toggle="tab" data-bs-target="#replies-tab-pane" type="button" role="tab" aria-controls="replies-tab-pane" aria-selected="false">Tweets & replies</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="likes-tab" data-bs-toggle="tab" data-bs-target="#likes-tab-pane" type="button" role="tab" aria-controls="likes-tab-pane" aria-selected="false">Likes</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="tweets-tab-pane" role="tabpanel" aria-labelledby="tweets-tab" tabindex="0">
+                                    {% if tweets %}
+                                    <div class="list-group">
+                                        {% for tweet in tweets %}
+                                        <a href="/tweet/{{tweet.tweet_id}}" class="list-group-item list-group-item-action active pb-1" aria-current="true">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">{{tweet.post}}</h5>
+                                                <small>3 days ago</small>
+                                            </div>
+                                            <p class="mb-1">Some placeholder content in a paragraph.</p>
+                                            <small>And some small print.</small>
+                                        </a>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="tab-pane fade" id="replies-tab-pane" role="tabpanel" aria-labelledby="replies-tab" tabindex="0">Tweets & replies...</div>
+                                <div class="tab-pane fade" id="likes-tab-pane" role="tabpanel" aria-labelledby="likes-tab" tabindex="0">Likes...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </main>
+    <sidebar class="d-none d-md-block col-xl-3 col-lg-2 px-md-2">
+        <div class="input-group my-3">
+            <span class="input-group-text">Search</span>
+            <input type="text" aria-label="username" class="form-control">
+        </div>
+        <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-light">
+            <div class="d-flex align-items-center flex-shrink-0 p-3">
+                <span class="fs-5 fw-semibold">Who to follow</span>
+            </div>
+            {% if users %}
+            <div class="list-group scrollarea">
+                {% for user in users %}
+                {% if user.follower_id != session.user_id %}
+                <a href="#" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+                    <div class="d-flex w-100 align-items-center justify-content-between">
+                      <strong class="mb-1">{{user.username}}</strong>
+                      <small onClick="followUser('{{ user.user_id }}', '{{ session.csrf_token }}')">Follow</small>
+                    </div>
+                    <div class="col-10 mb-1 small">@{{user.username}}</div>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </sidebar>
+{% endblock %}
