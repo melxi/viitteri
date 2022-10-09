@@ -24,14 +24,12 @@ CREATE TABLE tweets(
 );
 
 CREATE TABLE replies(
-    reply_id SERIAL,
-    user_id INTEGER NOT NULL,
+    reply_id INTEGER NOT NULL UNIQUE,
     tweet_id INTEGER NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(reply_id),
-    CONSTRAINT rp_users_fk
-      FOREIGN KEY(user_id) 
-	    REFERENCES users(user_id),
+    PRIMARY KEY(reply_id, tweet_id),
+    CONSTRAINT rp_replies_fk
+      FOREIGN KEY(reply_id) 
+	    REFERENCES replies(reply_id),
     CONSTRAINT rp_tweets_fk
       FOREIGN KEY(tweet_id) 
 	    REFERENCES tweets(tweet_id)

@@ -6,6 +6,7 @@ async function followUser(userId, csrfToken) {
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin':'*',
         'X-CSRFToken': csrfToken
       },
       body: JSON.stringify(userId)

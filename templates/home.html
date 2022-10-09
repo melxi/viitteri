@@ -33,10 +33,10 @@
                     {% for tweet in tweets %}
                     <a href="/tweet/{{tweet.tweet_id}}" class="list-group-item list-group-item-action active pb-1" aria-current="true">
                         <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{tweet.post}}</h5>
-                            <small>3 days ago</small>
+                            <h5 class="mb-1">{{tweet.username}}</h5>
+                            <small>{{tweet.created_at}}</small>
                         </div>
-                        <p class="mb-1">Some placeholder content in a paragraph.</p>
+                        <p class="mb-1">{{tweet.post}}</p>
                         <small>And some small print.</small>
                     </a>
                     {% endfor %}

@@ -30,23 +30,39 @@
                         </div>
                         <div class="card-footer text-muted">
                             <ul class="list-group">
-                            <li class="list-group-item">
-                                <span class="fs-4 px-2">{{tweet.total_likes}} likes</span>
-                                <span class="fs-4 px-2">{{tweet.total_replies}} replies</span>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="form-tweet">
-                                    <p class="card-text">Replying to @{{tweet.username}}</p>
-                                    <form action="/reply" method="POST">                        
-                                        <div class="form-floating">
-                                            <input type="text" class="form-control" name="post" id="floatingInput" placeholder="Tweet your reply">
-                                            <label for="floatingInput">Tweet your reply</label>
+                                <li class="list-group-item">
+                                    <span class="fs-4 px-2">{{tweet.total_likes}} likes</span>
+                                    <span class="fs-4 px-2">{{tweet.total_replies}} replies</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="form-tweet">
+                                        <p class="card-text">Replying to @{{tweet.username}}</p>
+                                        <form action="/reply" method="POST">                        
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" name="post" id="floatingInput" placeholder="Tweet your reply">
+                                                <label for="floatingInput">Tweet your reply</label>
+                                                <input type="hidden" name="csrf_token" id="csrfToken" value="{{ session.csrf_token }}">
+                                                <input type="hidden" name="tweet_id" value="{{ tweet.tweet_id }}">
+                                            </div>
+                                            <br/>
+                                            <button class="btn btn-primary float-end" type="submit">Reply</button>
+                                        </form>
+                                    </div>
+                                </li>
+                                {% if replies %}
+                                <li class="list-group-item">
+                                    {% for reply in replies %}
+                                    <a href="/tweet/{{reply.reply_id}}" class="list-group-item list-group-item-action active pb-1" aria-current="true">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">{{reply.username}}</h5>
+                                            <small>{{reply.created_at}}</small>
                                         </div>
-                                        <br/>
-                                        <button class="btn btn-primary float-end" type="submit">Reply</button>
-                                    </form>
-                                </div>
-                            </li>
+                                        <small>Replying to {{reply.reply_to}}</small>
+                                        <p class="mb-1">{{reply.post}}</p>
+                                    </a>
+                                    {% endfor %}
+                                </li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>

@@ -2,10 +2,10 @@ from flask import render_template, request, redirect, session, json
 from app import app
 import users
 import tweets
+import replies
 
 @app.route('/')
 def index():
-    print(session.get('logged_in'))
     if session.get('logged_in') == True:
         return redirect('/home')
 
@@ -60,7 +60,6 @@ def follow():
 
     if request.method == 'POST':
         data = request.get_json()
-        print(data)
         followee_id = data
 
         users.follow_user(user_id, followee_id)
@@ -86,9 +85,26 @@ def add_tweet():
 @app.route('/tweet/<int:tweet_id>', methods = ['GET'])
 def get_tweet(tweet_id):
     
-    return render_template('tweet.html', tweet=tweets.get_tweet(tweet_id))
+    return render_template('tweet.html', tweet=tweets.get_tweet(tweet_id), replies=replies.get_replies(tweet_id))
 
 @app.route('/<string:username>', methods=['GET'])
 def get_profile(username):
     
     return render_template('profile.html', user = users.get_user(), users = users.get_users(), tweets = tweets.get_tweets(users.user_id()),)
+
+@app.route('/reply', methods= ['POST'])
+def add_reply():
+    users.require_role(1)
+    users.check_csrf()
+
+    user_id = users.user_id()
+
+    if request.method == 'POST':
+        post = request.form['post']
+        tweet_id = request.form['tweet_id']
+
+        replies.add_reply(tweet_id, user_id, post)
+
+        return redirect(request.referrer)
+
+    return render_template('home.html')
