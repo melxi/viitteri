@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, session, json
+from flask_cors import cross_origin
 from app import app
 import users
 import tweets
@@ -53,6 +54,7 @@ def home():
     return render_template('home.html', tweets = tweets.get_tweets(users.user_id()), users = users.get_users())
 
 @app.route('/follow', methods=['POST'])
+@cross_origin()
 def follow():
     users.require_role(1)
 
