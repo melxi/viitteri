@@ -104,8 +104,6 @@ def get_followees(username):
 def get_followers(username):
     users.require_role(1)
 
-    users.is_following()
-
     return render_template('followers.html', user = users.get_user(), followers = users.get_followers())
 
 @app.route('/reply', methods= ['POST'])
