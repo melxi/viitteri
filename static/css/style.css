@@ -10,3 +10,14 @@ body {
 main {
     height: 100vh;
 }
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.list-group-item:last-child {
+    border-bottom-right-radius: 0.375rem !important;
+    border-bottom-left-radius: 0.375rem !important;
+}

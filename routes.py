@@ -94,6 +94,20 @@ def get_profile(username):
     
     return render_template('profile.html', user = users.get_user(), users = users.get_users(), tweets = tweets.get_tweets(users.user_id()),)
 
+@app.route('/<string:username>/following', methods=['GET'])
+def get_followees(username):
+    users.require_role(1)
+
+    return render_template('following.html', user = users.get_user(), followees = users.get_followees())
+
+@app.route('/<string:username>/followers', methods=['GET'])
+def get_followers(username):
+    users.require_role(1)
+
+    users.is_following()
+
+    return render_template('followers.html', user = users.get_user(), followers = users.get_followers())
+
 @app.route('/reply', methods= ['POST'])
 def add_reply():
     users.require_role(1)

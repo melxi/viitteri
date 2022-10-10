@@ -52,7 +52,7 @@
                                 {% if replies %}
                                 <li class="list-group-item">
                                     {% for reply in replies %}
-                                    <a href="/tweet/{{reply.reply_id}}" class="list-group-item list-group-item-action active pb-1" aria-current="true">
+                                    <a href="/tweet/{{reply.tweet_id}}" class="list-group-item list-group-item-action active pb-1" aria-current="true">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h5 class="mb-1">{{reply.username}}</h5>
                                             <small>{{reply.created_at}}</small>

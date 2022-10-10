@@ -32,8 +32,12 @@
                                   <h5 class="card-title">{{ user.username }}</h5>
                                   <p class="card-text">@{{ user.username }}</p>
                                   <p class="card-text"><small class="text-muted">Joined {{ user.joined }}</small></p>
-                                  <span><strong>{{ user.total_followees }}</strong> Following</span>
-                                  <span><strong>{{ user.total_followers }}</strong> Followers</span>
+                                  <a href="/{{ user.username }}/following" class="link-dark text-decoration-none">
+                                    <strong>{{ user.total_followees }}</strong> Following
+                                  </a>
+                                  <a href="/{{ user.username }}/followers" class="link-dark text-decoration-none">
+                                    <strong>{{ user.total_followers }}</strong> Followers
+                                  </a>
                                 </div>
                               </div>
                             </div>
@@ -88,13 +92,13 @@
             <div class="list-group scrollarea">
                 {% for user in users %}
                 {% if user.follower_id != session.user_id %}
-                <a href="#" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+                <div class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
                     <div class="d-flex w-100 align-items-center justify-content-between">
                       <strong class="mb-1">{{user.username}}</strong>
-                      <small onClick="followUser('{{ user.user_id }}', '{{ session.csrf_token }}')">Follow</small>
+                      <button class="btn btn-follow" data-user="{{ user.user_id }}" data-csrf="{{ session.csrf_token }}">Follow</button>
                     </div>
                     <div class="col-10 mb-1 small">@{{user.username}}</div>
-                </a>
+                </div>
                 {% endif %}
                 {% endfor %}
             </div>

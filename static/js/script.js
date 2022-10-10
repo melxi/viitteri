@@ -1,16 +1,21 @@
 const URL = 'http://localhost:5000'
 
-async function followUser(userId, csrfToken) {
-    const response = await fetch(`${URL}/follow`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin':'*',
-        'X-CSRFToken': csrfToken
-      },
-      body: JSON.stringify(userId)
-    })
+const followBtns = document.querySelectorAll('.btn-follow')
 
-    return response.json()
-}
+followBtns.forEach(followBtn => {
+  followBtn.addEventListener('click', async ({ target }) => {
+    const { user, csrf } = target.dataset
+  
+    const response = await fetch(`${URL}/follow`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrf
+        },
+        body: JSON.stringify(user)
+      })
+  
+      return response.json()
+  })
+})

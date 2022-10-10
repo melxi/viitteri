@@ -58,13 +58,13 @@
             <div class="list-group scrollarea">
                 {% for user in users %}
                 {% if user.follower_id != session.user_id %}
-                <a href="#" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+                <div class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
                     <div class="d-flex w-100 align-items-center justify-content-between">
                       <strong class="mb-1">{{user.username}}</strong>
-                      <small onClick="followUser('{{ user.user_id }}', '{{ session.csrf_token }}')">Follow</small>
+                      <button class="btn btn-follow" data-user="{{ user.user_id }}" data-csrf="{{ session.csrf_token }}">Follow</button>
                     </div>
                     <div class="col-10 mb-1 small">@{{user.username}}</div>
-                </a>
+                </div>
                 {% endif %}
                 {% endfor %}
             </div>

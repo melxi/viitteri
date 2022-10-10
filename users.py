@@ -96,3 +96,25 @@ def follow_user(user_id, followee_id):
             return False
 
     return True
+
+def get_followees():
+    sql = """SELECT us.user_id, us.username
+            FROM followees AS fw
+            INNER JOIN users AS us ON us.user_id = fw.followee_id
+            WHERE fw.user_id=:user_id"""
+    result = db.session.execute(sql, {"user_id": user_id()})
+    followees = result.fetchall()
+
+    return followees
+
+# get followers and those who you follow
+def get_followers():
+    sql = """SELECT us.username, fl.user_id, fl.follower_id, fw.user_id, fw.followee_id
+            FROM followers AS fl
+            LEFT JOIN users AS us ON us.user_id = fl.follower_id
+            LEFT JOIN followees AS fw ON fw.user_id = fl.user_id AND fl.follower_id = fw.followee_id
+            WHERE fl.user_id=:user_id"""
+    result = db.session.execute(sql, {"user_id": user_id()})
+    followers = result.fetchall()
+
+    return followers
