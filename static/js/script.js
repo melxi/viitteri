@@ -1,4 +1,4 @@
-const URL = 'http://localhost:5000'
+const URL = 'https://viitteri.herokuapp.com'
 
 const followBtns = document.querySelectorAll('.btn-follow')
 
