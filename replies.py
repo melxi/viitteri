@@ -25,5 +25,4 @@ def get_replies(tweet_id):
 
     # Sort replies by datetime
     replies.sort(key=lambda reply: reply[4], reverse=True)
-
     return replies
