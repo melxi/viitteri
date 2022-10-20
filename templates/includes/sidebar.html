@@ -6,32 +6,32 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="/home" class="nav-link active" aria-current="page">
+        <a href="/home" class="nav-link {{'active' if active == 'home' else 'link-dark'}}" aria-current="page">
           <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
           Home
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link-dark">
-          <svg class="bi me-2" width="16" height="16"><use xlink:href="#hash"></use></svg>
+        <a href="/explore" class="nav-link {{'active' if active == 'explore' else 'link-dark'}}">
+          <svg class="bi me-2" width="16" height="16"><use xlink:href="#explore"></use></svg>
           Explore
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link-dark">
-          <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+        <a href="/notifications" class="nav-link {{'active' if active == 'Notifications' else 'link-dark'}}">
+          <svg class="bi me-2" width="16" height="16"><use xlink:href="#notifications"></use></svg>
           Notifications
         </a>
       </li>
       <li>
-        <a href="/{{ session.username }}" class="nav-link link-dark">
-          <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+        <a href="/{{ session.username }}" class="nav-link {{'active' if active == 'profile' else 'link-dark'}}">
+          <svg class="bi me-2" width="16" height="16"><use xlink:href="#profile"></use></svg>
           Profile
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link-dark">
-          <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+        <a href="/bookmarks" class="nav-link {{'active' if active == 'bookmarks' else 'link-dark'}}">
+          <svg class="bi me-2" width="16" height="16"><use xlink:href="#bookmarks"></use></svg>
           Bookmarks
         </a>
       </li>

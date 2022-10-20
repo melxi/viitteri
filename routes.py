@@ -4,6 +4,7 @@ from app import app
 import users
 import tweets
 import replies
+import likes
 
 @app.route('/')
 def index():
@@ -46,7 +47,7 @@ def signup():
 def home():
     if not users.require_role(1):
         return redirect('/')
-    return render_template('home.html', tweets = tweets.get_tweets(users.user_id()), users = users.get_users())
+    return render_template('home.html', tweets=tweets.get_feed_tweets(users.user_id()), users=users.get_users())
 
 @app.route('/follow', methods=['POST'])
 @cross_origin()
@@ -60,9 +61,9 @@ def follow():
         followee_id = data
 
         users.follow_user(user_id, followee_id)
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
-@app.route('/tweet', methods = ['POST'])
+@app.route('/tweet', methods=['POST'])
 def add_tweet():
     users.require_role(1)
     users.check_csrf()
@@ -76,25 +77,25 @@ def add_tweet():
         return redirect('/home')
     return render_template('home.html')
 
-@app.route('/tweet/<int:tweet_id>', methods = ['GET'])
+@app.route('/tweet/<int:tweet_id>', methods=['GET'])
 def get_tweet(tweet_id):
     return render_template('tweet.html', tweet=tweets.get_tweet(tweet_id), replies=replies.get_replies(tweet_id))
 
 @app.route('/<string:username>', methods=['GET'])
 def get_profile(username):
-    return render_template('profile.html', user = users.get_user(), users = users.get_users(), tweets = tweets.get_tweets(users.user_id()),)
+    return render_template('profile.html', user=users.get_user(), users=users.get_users(), tweets=tweets.get_tweets(users.user_id()),)
 
 @app.route('/<string:username>/following', methods=['GET'])
 def get_followees(username):
     users.require_role(1)
-    return render_template('following.html', user = users.get_user(), followees = users.get_followees())
+    return render_template('following.html', user=users.get_user(), followees=users.get_followees())
 
 @app.route('/<string:username>/followers', methods=['GET'])
 def get_followers(username):
     users.require_role(1)
-    return render_template('followers.html', user = users.get_user(), followers = users.get_followers())
+    return render_template('followers.html', user=users.get_user(), followers=users.get_followers())
 
-@app.route('/reply', methods= ['POST'])
+@app.route('/reply', methods=['POST'])
 def add_reply():
     users.require_role(1)
     users.check_csrf()
@@ -108,3 +109,34 @@ def add_reply():
         replies.add_reply(tweet_id, user_id, post)
         return redirect(request.referrer)
     return render_template('home.html')
+
+@app.route('/like', methods=['POST'])
+@cross_origin()
+def like():
+    users.require_role(1)
+
+    user_id = users.user_id()
+
+    if request.method == 'POST':
+        data = request.get_json()
+        tweet_id = data
+        likes.add_like(tweet_id, user_id)
+
+        has_liked = likes.has_liked(tweet_id, user_id)
+    return json.dumps({'success': True, 'hasLiked': has_liked}), 200, {'ContentType': 'application/json'}
+
+
+@app.route('/unlike', methods=['POST'])
+@cross_origin()
+def unlike():
+    users.require_role(1)
+
+    user_id = users.user_id()
+
+    if request.method == 'POST':
+        data = request.get_json()
+        tweet_id = data
+        likes.remove_like(tweet_id, user_id)
+
+        has_liked = likes.has_liked(tweet_id, user_id)
+    return json.dumps({'success': True, 'hasLiked': has_liked}), 200, {'ContentType': 'application/json'}

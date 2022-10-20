@@ -21,3 +21,7 @@ main {
     border-bottom-right-radius: 0.375rem !important;
     border-bottom-left-radius: 0.375rem !important;
 }
+
+.bi {
+    pointer-events: none
+}

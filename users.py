@@ -75,14 +75,14 @@ def follow_user(user_id, followee_id):
     sql = """SELECT user_id, followee_id
             FROM followees 
             WHERE user_id=:user_id AND followee_id=:followee_id"""
-    result = db.session.execute(sql, {"user_id": user_id, "followee_id":followee_id})
+    result = db.session.execute(sql, {"user_id": user_id, "followee_id": followee_id})
     followee = result.fetchone()
 
     if not followee:
         try:
             sql = """INSERT INTO followees(user_id, followee_id)
                     VALUES (:user_id, :followee_id)"""
-            db.session.execute(sql, {"user_id":user_id, "followee_id":followee_id})
+            db.session.execute(sql, {"user_id": user_id, "followee_id": followee_id})
             db.session.commit()
 
             sql = """INSERT INTO followers(user_id, follower_id)

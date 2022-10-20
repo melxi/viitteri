@@ -17,3 +17,4 @@ Viitteri is a Twitter-like social networking application with limited features
 - User is able to send a tweet and view it on a separate page
 - User is able to reply to a tweet
 - User is able to follow other users
+- User is able to like and unlike a tweet

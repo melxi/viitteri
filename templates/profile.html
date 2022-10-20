@@ -7,7 +7,9 @@
 {% block content %}
     <header class="col-xl-3 col-lg-3 col-md-3 col-sm-2 d-md-block">
         {% block sidebar %}
-        {% include 'includes/sidebar.html' %}
+        {% with active='profile' %}
+                {% include 'includes/sidebar.html' %}
+            {% endwith %}
         {% endblock %}
     </header>
     <main class="col-xl-6 col-lg-7 col-md-9 col-sm-10 px-md-4">

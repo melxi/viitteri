@@ -35,6 +35,19 @@ CREATE TABLE replies(
 	    REFERENCES tweets(tweet_id)
 );
 
+CREATE TABLE likes(
+    like_id SERIAL,
+    tweet_id INTEGER NOT NULL,
+    user_id INTEGER NOT NUll,
+    PRIMARY KEY(like_id),
+    CONSTRAINT lk_tweets_fk
+      FOREIGN KEY(tweet_id) 
+	    REFERENCES tweets(tweet_id),
+    CONSTRAINT lk_users_fk
+      FOREIGN KEY(user_id) 
+	    REFERENCES users(user_id)
+);
+
 CREATE TABLE followees(
     id SERIAL,
     user_id INTEGER NOT NULL,
