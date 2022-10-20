@@ -1,5 +1,4 @@
-// const URL = 'https://viitteri.herokuapp.com'
-const URL = 'http://localhost:5000'
+const URL = 'https://viitteri.herokuapp.com'
 
 const followBtns = document.querySelectorAll('.btn-follow')
 const likeBtns = document.querySelectorAll('.btn-like')
