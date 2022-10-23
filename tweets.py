@@ -12,15 +12,6 @@ def add_tweet(post, user_id):
     except:
         return False
 
-def get_tweets(user_id):
-    sql = "SELECT * FROM tweets WHERE user_id=:user_id ORDER BY created_at DESC"
-    result = db.session.execute(sql, {"user_id": user_id})
-    tweets = result.fetchall()
-
-    if not tweets:
-        return False
-    return tweets
-
 def get_tweet(tweet_id):
     sql = """SELECT tw.tweet_id, tw.post, tw.total_likes, tw.created_at, us.username,
                 (CASE
@@ -56,8 +47,8 @@ def get_tweet(tweet_id):
         return False
     return tweet
 
-def get_feed_tweets(user_id):
-    followees = users.get_followees()
+def get_tweets(user_id):
+    followees = users.get_followees(user_id)
 
     user_ids = [user_id]
     if followees:

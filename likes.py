@@ -3,6 +3,7 @@ import tweets
 
 def add_like(tweet_id, user_id):
     if not has_liked(tweet_id, user_id):
+        print('adding like')
         try:
             sql = """INSERT INTO likes(tweet_id, user_id)
                     VALUES (:tweet_id, :user_id)"""
@@ -14,6 +15,7 @@ def add_like(tweet_id, user_id):
 
 def remove_like(tweet_id, user_id):
     if has_liked(tweet_id, user_id):
+        print('removing like')
         try:
             sql = "DELETE FROM likes WHERE tweet_id=:tweet_id AND user_id=:user_id"
             db.session.execute(sql, {"tweet_id": tweet_id, "user_id": user_id})
@@ -43,6 +45,8 @@ def has_liked(tweet_id, user_id):
 
 
     if liked and liked['liked'] == 'True':
+        print('returning true')
         return True
 
+    print('returning false')
     return False

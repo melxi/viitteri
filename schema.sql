@@ -1,6 +1,6 @@
 CREATE TABLE users(
     user_id SERIAL,
-    username VARCHAR(20) NOT NULL,
+    username VARCHAR(20) NOT NULL UNIQUE,
     favorites_count INTEGER DEFAULT 0,
     password TEXT NOT NULL,
     role INTEGER DEFAULT 1,

@@ -37,7 +37,13 @@ def signup(username, password):
         return False
     return login(username, password)
 
-def user_id():
+def user_id(username=None):
+    if username:
+        sql = "SELECT user_id FROM users WHERE username=:username"
+        result = db.session.execute(sql, {"username": username})
+        user_id = result.fetchone()
+
+        return user_id[0]
     return session.get("user_id", 0)
 
 def require_role(role):
@@ -49,24 +55,24 @@ def check_csrf():
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
 
-def get_users():
+def get_users(user_id):
     sql = """SELECT us.user_id, us.username, fw.followee_id, fl.follower_id
              FROM users AS us
-             FULL OUTER JOIN followees AS fw ON us.user_id = fw.user_id 
+             FULL OUTER JOIN followees AS fw ON us.user_id = fw.user_id
              FULL OUTER JOIN followers AS fl ON us.user_id = fl.user_id
              WHERE us.user_id!=:user_id"""
-    result = db.session.execute(sql, {"user_id": user_id()})
+    result = db.session.execute(sql, {"user_id": user_id})
     users = result.fetchall()
     return users
 
-def get_user():
+def get_user(username):
     sql = """SELECT us.username, TO_CHAR(us.created_at, 'Month YYYY') AS joined,
             (SELECT COUNT(tw.tweet_id) FROM tweets AS tw WHERE user_id=:user_id) AS total_tweets,
             (SELECT COUNT(fw.followee_id) FROM followees AS fw WHERE user_id=:user_id) AS total_followees,
             (SELECT COUNT(fl.follower_id) FROM followers AS fl WHERE user_id=:user_id) AS total_followers
             FROM users AS us
             WHERE us.user_id=:user_id"""
-    result = db.session.execute(sql, {"user_id": user_id()})
+    result = db.session.execute(sql, {"user_id": user_id(username)})
     user = result.fetchone()
 
     return user
@@ -93,24 +99,24 @@ def follow_user(user_id, followee_id):
             return False
     return True
 
-def get_followees():
+def get_followees(user_id):
     sql = """SELECT us.user_id, us.username
             FROM followees AS fw
             INNER JOIN users AS us ON us.user_id = fw.followee_id
             WHERE fw.user_id=:user_id"""
-    result = db.session.execute(sql, {"user_id": user_id()})
+    result = db.session.execute(sql, {"user_id": user_id})
     followees = result.fetchall()
 
     return followees
 
 # get followers and those who you follow
-def get_followers():
+def get_followers(user_id):
     sql = """SELECT us.username, fl.user_id, fl.follower_id, fw.user_id, fw.followee_id
             FROM followers AS fl
             LEFT JOIN users AS us ON us.user_id = fl.follower_id
             LEFT JOIN followees AS fw ON fw.user_id = fl.user_id AND fl.follower_id = fw.followee_id
             WHERE fl.user_id=:user_id"""
-    result = db.session.execute(sql, {"user_id": user_id()})
+    result = db.session.execute(sql, {"user_id": user_id})
     followers = result.fetchall()
 
     return followers

@@ -1,10 +1,15 @@
-from flask import render_template, request, redirect, session, json
+from flask import render_template, request, redirect, session, json, flash
 from flask_cors import cross_origin
 from app import app
 import users
 import tweets
 import replies
 import likes
+
+
+def error(message, destination):
+    flash(message)
+    return redirect(destination)
 
 @app.route('/')
 def index():
@@ -20,7 +25,7 @@ def login():
         password = request.form['password']
 
         if not users.login(username, password):
-            return render_template('login.html')
+            return error("Wrong username or password", "login")
         return redirect('/home')
 
     if session.get('logged_in') is True:
@@ -38,8 +43,14 @@ def signup():
         username = request.form['username']
         password = request.form['password']
 
+        if len(username) < 3:
+            return error("Username is too short", "signup")
+
+        if len(password) < 4:
+            return error("Password is too short", "signup")
+
         if not users.signup(username, password):
-            return render_template('signup.html')
+            return error("A user with that username already exists", "signup")
         return redirect('/home')
     return render_template('signup.html')
 
@@ -47,7 +58,7 @@ def signup():
 def home():
     if not users.require_role(1):
         return redirect('/')
-    return render_template('home.html', tweets=tweets.get_feed_tweets(users.user_id()), users=users.get_users())
+    return render_template('home.html', tweets=tweets.get_tweets(users.user_id()), users=users.get_users(users.user_id()))
 
 @app.route('/follow', methods=['POST'])
 @cross_origin()
@@ -83,17 +94,17 @@ def get_tweet(tweet_id):
 
 @app.route('/<string:username>', methods=['GET'])
 def get_profile(username):
-    return render_template('profile.html', user=users.get_user(), users=users.get_users(), tweets=tweets.get_tweets(users.user_id()),)
+    return render_template('profile.html', user=users.get_user(username), users=users.get_users(users.user_id()), tweets=tweets.get_tweets(users.user_id(username)))
 
 @app.route('/<string:username>/following', methods=['GET'])
 def get_followees(username):
     users.require_role(1)
-    return render_template('following.html', user=users.get_user(), followees=users.get_followees())
+    return render_template('following.html', user=users.get_user(username), followees=users.get_followees(users.user_id(username)))
 
 @app.route('/<string:username>/followers', methods=['GET'])
 def get_followers(username):
     users.require_role(1)
-    return render_template('followers.html', user=users.get_user(), followers=users.get_followers())
+    return render_template('followers.html', user=users.get_user(username), followers=users.get_followers(users.user_id(username)))
 
 @app.route('/reply', methods=['POST'])
 def add_reply():
@@ -129,6 +140,7 @@ def like():
 @app.route('/unlike', methods=['POST'])
 @cross_origin()
 def unlike():
+    print('called unlike')
     users.require_role(1)
 
     user_id = users.user_id()
