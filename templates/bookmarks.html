@@ -2,36 +2,24 @@
 {% block title %}Home{% endblock %}
 {% block styles %}
     {{super()}}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bookmarks.css') }}" />
 {% endblock %}
 {% block content %}
     <header class="col-xl-3 col-lg-3 col-md-3 col-sm-2 d-md-block">
         {% block sidebar %}
-            {% with active='home' %}
+            {% with active='bookmarks' %}
                 {% include 'includes/sidebar.html' %}
             {% endwith %}
         {% endblock %}
     </header>
     <main class="col-xl-6 col-lg-7 col-md-9 col-sm-10 px-md-4">
         <div class="container">
-            <div class="home-timeline pt-2">
+            <div class="bookmarks-timeline pt-2">
                 <div class="title">
-                    <h1>Home</h1>
+                    <h1>Bookmarks</h1>
                 </div>
-                <div class="form-tweet">
-                    <form class="d-flex flex-column" action="/tweet" method="POST">                        
-                        <div class="form-floating">
-                            <input type="text" class="form-control" name="post" id="floatingInput" placeholder="What's happening?">
-                            <label for="floatingInput">What's happening?</label>
-                            <input type="hidden" name="csrf_token" id="csrfToken" value="{{ session.csrf_token }}">
-                        </div>
-                        <br/>
-                        <button class="btn btn-primary align-self-end" type="submit">Tweet</button>
-                    </form>
-                </div>
-                <br/>
-                {% if tweets %}
-                    {% with tweets=tweets %}
+                {% if bookmarks %}
+                    {% with tweets=bookmarks %}
                         {% include 'includes/tweets.html' %}
                     {% endwith %}
                 {% endif %}

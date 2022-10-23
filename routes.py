@@ -5,6 +5,7 @@ import users
 import tweets
 import replies
 import likes
+import bookmarks
 
 
 def error(message, destination):
@@ -65,6 +66,12 @@ def explore():
     if not users.require_role(1):
         return redirect('/')
     return render_template('explore.html', tweets=tweets.get_recent_tweets(users.user_id()), users=users.get_users(users.user_id()))
+
+@app.route('/bookmarks')
+def bookmarks_page():
+    if not users.require_role(1):
+        return redirect('/')
+    return render_template('bookmarks.html', bookmarks=bookmarks.get_bookmarks(users.user_id()), users=users.get_users(users.user_id()))
 
 @app.route('/follow', methods=['POST'])
 @cross_origin()
@@ -131,7 +138,6 @@ def add_reply():
 @cross_origin()
 def like():
     users.require_role(1)
-
     user_id = users.user_id()
 
     if request.method == 'POST':
@@ -146,15 +152,38 @@ def like():
 @app.route('/unlike', methods=['POST'])
 @cross_origin()
 def unlike():
-    print('called unlike')
     users.require_role(1)
-
     user_id = users.user_id()
 
     if request.method == 'POST':
         data = request.get_json()
         tweet_id = data
         likes.remove_like(tweet_id, user_id)
-
         has_liked = likes.has_liked(tweet_id, user_id)
     return json.dumps({'success': True, 'hasLiked': has_liked}), 200, {'ContentType': 'application/json'}
+
+@app.route('/bookmark', methods=['POST'])
+@cross_origin()
+def bookmark():
+    users.require_role(1)
+    user_id = users.user_id()
+
+    if request.method == 'POST':
+        data = request.get_json()
+        tweet_id = data
+        bookmarks.add_bookmark(tweet_id, user_id)
+        has_bookmarked = bookmarks.has_bookmarked(tweet_id, user_id)
+    return json.dumps({'success': True, 'hasBookmarked': has_bookmarked}), 200, {'ContentType': 'application/json'}
+
+@app.route('/unbookmark', methods=['POST'])
+@cross_origin()
+def unbookmark():
+    users.require_role(1)
+    user_id = users.user_id()
+
+    if request.method == 'POST':
+        data = request.get_json()
+        tweet_id = data
+        bookmarks.remove_bookmark(tweet_id, user_id)
+        has_bookmarked = bookmarks.has_bookmarked(tweet_id, user_id)
+    return json.dumps({'success': True, 'hasBookmarked': has_bookmarked}), 200, {'ContentType': 'application/json'}

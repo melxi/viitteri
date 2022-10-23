@@ -48,6 +48,21 @@ CREATE TABLE likes(
 	    REFERENCES users(user_id)
 );
 
+CREATE TABLE bookmarks(
+    bookmark_id SERIAL,
+    tweet_id INTEGER NOT NULL,
+    user_id INTEGER NOT NUll,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(bookmark_id),
+    CONSTRAINT bk_tweets_fk
+      FOREIGN KEY(tweet_id) 
+	    REFERENCES tweets(tweet_id),
+    CONSTRAINT bk_users_fk
+      FOREIGN KEY(user_id) 
+	    REFERENCES users(user_id)
+);
+
 CREATE TABLE followees(
     id SERIAL,
     user_id INTEGER NOT NULL,
