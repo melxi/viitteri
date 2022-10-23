@@ -36,6 +36,14 @@ def has_bookmarked(tweet_id, user_id):
 def get_bookmarks(user_id):
     sql = """SELECT tw.tweet_id, tw.post,
                 (CASE
+                    WHEN (DATE_PART('year', now()) - DATE_PART('year', tw.created_at)) > 1
+                        THEN TO_CHAR(tw.created_at, 'Mon DD YYYY')
+                    WHEN (DATE_PART('year', now()) - DATE_PART('year', tw.created_at)) = 1
+                        THEN TO_CHAR(tw.created_at, 'Mon DD YYYY')
+                    WHEN DATE_PART('day', now() - tw.created_at) > 1
+                        THEN TO_CHAR(tw.created_at, 'Mon DD')
+                    WHEN DATE_PART('day', now() - tw.created_at) = 1
+                        THEN TO_CHAR(tw.created_at, 'Mon DD')
                     WHEN ((DATE_PART('day', now() - tw.created_at) * 24) + (DATE_PART('hour', now() - tw.created_at))) > 1
                         THEN CONCAT(((DATE_PART('day', now() - tw.created_at) * 24) + (DATE_PART('hour', now() - tw.created_at))), ' hours ago')
                     WHEN ((DATE_PART('day', now() - tw.created_at) * 24) + (DATE_PART('hour', now() - tw.created_at))) = 1
