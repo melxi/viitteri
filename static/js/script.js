@@ -1,4 +1,5 @@
-const URL = 'https://viitteri.herokuapp.com'
+// const URL = 'https://viitteri.herokuapp.com'
+const URL = 'http://localhost:5000'
 
 const followBtns = document.querySelectorAll('.btn-follow')
 const likeBtns = document.querySelectorAll('.btn-like')
@@ -40,12 +41,13 @@ likeBtns.forEach(likeBtn => {
       const data = await response.json()
 
       if (!data.hasLiked) {
+        console.log('unlike')
         const heartElement = target.firstElementChild
         heartElement.className = heartElement.className.replace('-fill','');
         heartElement.nextElementSibling.textContent--
       }
 
-      return false;
+      return true;
     }
 
     const response = await fetch(`${URL}/like`, {

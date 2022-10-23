@@ -60,6 +60,12 @@ def home():
         return redirect('/')
     return render_template('home.html', tweets=tweets.get_tweets(users.user_id()), users=users.get_users(users.user_id()))
 
+@app.route('/explore')
+def explore():
+    if not users.require_role(1):
+        return redirect('/')
+    return render_template('explore.html', tweets=tweets.get_recent_tweets(users.user_id()), users=users.get_users(users.user_id()))
+
 @app.route('/follow', methods=['POST'])
 @cross_origin()
 def follow():
